@@ -59,25 +59,39 @@ def get_strike_prices(coin):
 
 
 if __name__ == "__main__":
-    # Get today's or tomorrow's date based on time
-    day = (datetime.now()).strftime('%d-%m-%Y')
-    if datetime.now().hour > 17 or (datetime.now().hour == 17 and datetime.now().minute > 30):
-        day = (datetime.now() + timedelta(1)).strftime('%d-%m-%Y')
-    date_refined = '' if day[0] == '0' else day[0]
-    date_refined = date_refined + day[1:3]
-    date_refined = date_refined + '' if day[3] == '0' else day[3]
-    date_refined = date_refined + day[4:]
+    current_hour = datetime.now().hour
+    message_sent = {current_hour: []}
+    while True:
+        # Get today's or tomorrow's date based on time
+        day = (datetime.now()).strftime('%d-%m-%Y')
+        if datetime.now().hour > 17 or (datetime.now().hour == 17 and datetime.now().minute > 30):
+            day = (datetime.now() + timedelta(1)).strftime('%d-%m-%Y')
+        date_refined = '' if day[0] == '0' else day[0]
+        date_refined = date_refined + day[1:3]
+        date_refined = date_refined + '' if day[3] == '0' else day[3]
+        date_refined = date_refined + day[4:]
+        calls, puts = get_strike_prices(coin="ETH")
 
-    calls, puts = get_strike_prices(coin="ETH")
-
-    c, p = 0, 1
-    while c < len(calls) - 1:
-        if p == len(calls) - 1:
-            c += 1
-            p = c + 1
-        else:
-            if calls[c][1] > puts[p][1]:
-                status, error_message = telegram.send_message(str(calls[c] + puts[p]))
-                if not status:
-                    logger.error(error_message)
-            p += 1
+        c, p = 0, 1
+        while c < len(calls) - 1:
+            if p == len(calls) - 1:
+                c += 1
+                p = c + 1
+            else:
+                if calls[c][1] > puts[p][1]:
+                    to_send = str(calls[c] + puts[p])
+                    if datetime.now().hour == current_hour:
+                        if to_send not in message_sent[current_hour]:
+                            status, error_message = telegram.send_message(to_send)
+                            message_sent[current_hour].append(to_send)
+                            if not status:
+                                logger.error(error_message)
+                    else:
+                        current_hour = datetime.now().hour
+                        message_sent = {datetime.now().hour: []}
+                        if to_send not in message_sent[current_hour]:
+                            status, error_message = telegram.send_message(to_send)
+                            message_sent[current_hour].append(to_send)
+                            if not status:
+                                logger.error(error_message)
+                p += 1
