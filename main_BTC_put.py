@@ -17,19 +17,16 @@ logger.setLevel(logging.INFO)
 def get_prices(strike):
     global count, local_count
     mode = "sell" if local_count < count else "buy"
+    headers = {
+        'Accept': 'application/json'
+    }
+    local_count += 1
     try:
-        headers = {
-            'Accept': 'application/json'
-        }
-        local_count += 1
-        if mode == "sell":
-            return strike, requests.get('https://api.delta.exchange/v2/l2orderbook/{}'.format(strike), params={
-            }, headers=headers).json()['result'][mode][0]['price']
-        else:
-            return strike, requests.get('https://api.delta.exchange/v2/l2orderbook/{}'.format(strike), params={
-            }, headers=headers).json()['result'][mode][0]['price']
-    except Exception as get_price:
-        logger.error("get_price Error:" + str(get_price))
+        r = requests.get('https://api.delta.exchange/v2/l2orderbook/{}'.format(strike), params={
+        }, headers=headers)
+        return strike, r.json()['result'][mode][0]['price']
+    except requests.exceptions.RequestException as e:
+        logger.error("requests error:" + str(e))
 
 
 # Api call to get strike price symbols
@@ -47,8 +44,8 @@ def get_strike_prices(coin):
             if i['description'] == '{} put option expiring on {}'.format(coin, date_refined):
                 all_puts_sell.append(i['symbol'])
 
-    except Exception as symbol_error:
-        logger.error("symbol_error Error" + str(symbol_error))
+    except requests.exceptions.RequestException as e:
+        logger.error("requests at strike price error:" + str(e))
 
     all_puts_buy = deepcopy(all_puts_sell)
     count = len(all_puts_buy)
