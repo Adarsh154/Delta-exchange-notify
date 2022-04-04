@@ -27,6 +27,7 @@ def get_prices(strike):
         return strike, r.json()['result'][mode][0]['price']
     except requests.exceptions.RequestException as e:
         logger.error("requests error:" + str(e))
+        telegram.send_message(str(e))
 
 
 # Api call to get strike price symbols
@@ -46,6 +47,7 @@ def get_strike_prices(coin):
 
     except requests.exceptions.RequestException as e:
         logger.error("requests at strike price error:" + str(e))
+        telegram.send_message(str(e))
 
     all_puts_buy = deepcopy(all_puts_sell)
     count = len(all_puts_buy)
