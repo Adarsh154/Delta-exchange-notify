@@ -24,6 +24,8 @@ def get_prices(strike):
     try:
         r = requests.get('https://api.delta.exchange/v2/l2orderbook/{}'.format(strike), params={
         }, headers=headers)
+        if not r.ok:
+            r.raise_for_status()
         return strike, r.json()['result'][mode][0]['price']
     except requests.exceptions.RequestException as e:
         logger.error("requests error:" + str(e))
@@ -66,7 +68,7 @@ if __name__ == "__main__":
     while True:
         count = 0
         local_count = 0
-        time.sleep(3)
+        time.sleep(310)
         # Get today's or tomorrow's date based on time
         day = (datetime.now()).strftime('%d-%m-%Y')
         if datetime.now().hour > 17 or (datetime.now().hour == 17 and datetime.now().minute >= 30):
