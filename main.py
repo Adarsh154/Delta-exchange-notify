@@ -13,9 +13,6 @@ logging.basicConfig(filename="std.log",
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-count = 0
-local_count = 0
-
 
 def get_prices(strike):
     global count, local_count
@@ -68,6 +65,8 @@ if __name__ == "__main__":
     current_hour = datetime.now().hour
     message_sent = {current_hour: []}
     while True:
+        count = 0
+        local_count = 0
         time.sleep(3)
         # Get today's or tomorrow's date based on time
         day = (datetime.now()).strftime('%d-%m-%Y')
