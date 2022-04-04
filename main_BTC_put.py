@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import telegram
 import logging
 
-logging.basicConfig(filename="eth_std_put.log",
+logging.basicConfig(filename="btc_std_put.log",
                     format='%(asctime)s %(message)s',
                     filemode='a')
 logger = logging.getLogger()
@@ -76,7 +76,7 @@ if __name__ == "__main__":
         date_refined = date_refined + day[1:3]
         date_refined = date_refined + '' if day[3] == '0' else day[3]
         date_refined = date_refined + day[4:]
-        puts_buy, puts_sell = get_strike_prices(coin="ETH")
+        puts_buy, puts_sell = get_strike_prices(coin="BTC")
 
         c, p = 0, 1
         while c < len(puts_buy) - 1:

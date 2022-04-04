@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import telegram
 import logging
 
-logging.basicConfig(filename="eth_std_put.log",
+logging.basicConfig(filename="btc_std_call.log",
                     format='%(asctime)s %(message)s',
                     filemode='a')
 logger = logging.getLogger()
@@ -34,7 +34,7 @@ def get_prices(strike):
 
 # Api call to get strike price symbols
 def get_strike_prices(coin):
-    all_puts_sell = list()
+    all_calls_sell = list()
     global count
     try:
         headers = {
@@ -44,21 +44,21 @@ def get_strike_prices(coin):
         }, headers=headers).json()['result']
 
         for i in r:
-            if i['description'] == '{} put option expiring on {}'.format(coin, date_refined):
-                all_puts_sell.append(i['symbol'])
+            if i['description'] == '{} call option expiring on {}'.format(coin, date_refined):
+                all_calls_sell.append(i['symbol'])
 
     except Exception as symbol_error:
         logger.error("symbol_error Error" + str(symbol_error))
 
-    all_puts_buy = deepcopy(all_puts_sell)
-    count = len(all_puts_buy)
+    all_calls_buy = deepcopy(all_calls_sell)
+    count = len(all_calls_buy)
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        all_puts_sell = list(executor.map(get_prices, all_puts_sell))
-        all_puts_buy = list(executor.map(get_prices, all_puts_buy))
+        all_calls_sell = list(executor.map(get_prices, all_calls_sell))
+        all_calls_buy = list(executor.map(get_prices, all_calls_buy))
 
-    all_puts_buy.sort(key=lambda x: x[0])
-    all_puts_sell.sort(key=lambda x: x[0])
-    return all_puts_buy, all_puts_sell
+    all_calls_buy.sort(key=lambda x: x[0], reverse=True)
+    all_calls_sell.sort(key=lambda x: x[0], reverse=True)
+    return all_calls_buy, all_calls_sell
 
 
 if __name__ == "__main__":
@@ -76,16 +76,16 @@ if __name__ == "__main__":
         date_refined = date_refined + day[1:3]
         date_refined = date_refined + '' if day[3] == '0' else day[3]
         date_refined = date_refined + day[4:]
-        puts_buy, puts_sell = get_strike_prices(coin="ETH")
+        calls_buy, calls_sell = get_strike_prices(coin="BTC")
 
         c, p = 0, 1
-        while c < len(puts_buy) - 1:
-            if p == len(puts_buy) - 1:
+        while c < len(calls_buy) - 1:
+            if p == len(calls_buy) - 1:
                 c += 1
                 p = c + 1
             else:
-                if float(puts_buy[c][1]) > float(puts_sell[p][1]):
-                    to_send = str(puts_buy[c] + puts_sell[p])
+                if float(calls_buy[c][1]) > float(calls_sell[p][1]):
+                    to_send = str(calls_buy[c] + calls_sell[p])
                     if datetime.now().hour == current_hour:
                         if to_send not in message_sent[current_hour]:
                             status, error_message = telegram.send_message(to_send)

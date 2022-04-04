@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import telegram
 import logging
 
-logging.basicConfig(filename="std_call.log",
+logging.basicConfig(filename="eth_std_call.log",
                     format='%(asctime)s %(message)s',
                     filemode='a')
 logger = logging.getLogger()
