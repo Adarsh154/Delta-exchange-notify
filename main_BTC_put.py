@@ -95,7 +95,7 @@ if __name__ == "__main__":
                     to_send = str(puts_buy[c] + puts_sell[p])
                     if datetime.now().hour == current_hour:
                         if to_send not in message_sent[current_hour]:
-                            status, error_message = telegram.send_message(to_send)
+                            status, error_message = telegram.send_message(to_send, False)
                             message_sent[current_hour].append(to_send)
                             if not status:
                                 logger.error("Message send error" + error_message)
@@ -103,7 +103,7 @@ if __name__ == "__main__":
                         current_hour = datetime.now().hour
                         message_sent = {datetime.now().hour: []}
                         if to_send not in message_sent[current_hour]:
-                            status, error_message = telegram.send_message(to_send)
+                            status, error_message = telegram.send_message(to_send, False)
                             message_sent[current_hour].append(to_send)
                             if not status:
                                 logger.error("Message send error" + error_message)
