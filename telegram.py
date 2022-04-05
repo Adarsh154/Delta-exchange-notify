@@ -1,4 +1,15 @@
-import requests, os
+import requests
+import os
+from datetime import datetime
+import logging
+
+log_file = str(datetime.utcnow().strftime('%d_%m_%Y')) + '.log'
+logging.basicConfig(filename=log_file,
+                    format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+                    datefmt='%Y-%m-%d:%H:%M:%S',
+                    level=logging.INFO, filemode='a')
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def send_message(text, error_message=True):
@@ -12,6 +23,6 @@ def send_message(text, error_message=True):
 
     response = requests.get(url)
     if not response.ok:
-        return False, "Status code: {}, error {}".format(response.status_code, response.text)
+        logger.error("telegram response code: " + str(response.status_code) + "Error message" + response.text)
 
     return True, ""
