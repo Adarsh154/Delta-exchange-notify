@@ -85,7 +85,8 @@ if __name__ == "__main__":
                 c += 1
                 p = c + 1
             else:
-                if float(calls_buy[c][1]) > float(calls_sell[p][1]):
+                diff = float(calls_buy[c][1]) - float(calls_sell[p][1])
+                if diff >= 0.05 and diff > ((float(calls_buy[c][1]) + float(calls_sell[p][1])) * 0.1):
                     to_send = str(calls_buy[c] + calls_sell[p])
                     if datetime.now().hour == current_hour:
                         if to_send not in message_sent[current_hour]:
