@@ -7,9 +7,9 @@ from datetime import datetime, timedelta
 import telegram
 import logging
 
-logging.basicConfig(filename="eth_std_put.log",
-                    format='%(asctime)s %(message)s',
-                    filemode='a')
+logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+                    datefmt='%Y-%m-%d:%H:%M:%S',
+                    level=logging.DEBUG)
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
