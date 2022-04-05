@@ -68,7 +68,7 @@ if __name__ == "__main__":
     while True:
         count = 0
         local_count = 0
-        time.sleep(320)
+        time.sleep(160)
         # Get today's or tomorrow's date based on time
         day = (datetime.now()).strftime('%d-%m-%Y')
         if datetime.now().hour > 17 or (datetime.now().hour == 17 and datetime.now().minute >= 30):
@@ -77,7 +77,12 @@ if __name__ == "__main__":
         date_refined = date_refined + day[1:3]
         date_refined = date_refined + '' if day[3] == '0' else day[3]
         date_refined = date_refined + day[4:]
-        puts_buy, puts_sell = get_strike_prices(coin="BTC")
+        try:
+            puts_buy, puts_sell = get_strike_prices(coin="BTC")
+        except Exception as e:
+            logger.error(str(e))
+            telegram.send_message(str(e))
+            continue
 
         c, p = 0, 1
         while c < len(puts_buy) - 1:
@@ -86,7 +91,7 @@ if __name__ == "__main__":
                 p = c + 1
             else:
                 diff = float(puts_buy[c][1]) - float(puts_sell[p][1])
-                if diff >= 0.05 and diff > ((float(puts_buy[c][1]) + float(puts_sell[p][1])) * 0.01):
+                if diff >= 2 and diff > ((float(puts_buy[c][1]) + float(puts_sell[p][1])) * 0.01):
                     to_send = str(puts_buy[c] + puts_sell[p])
                     if datetime.now().hour == current_hour:
                         if to_send not in message_sent[current_hour]:

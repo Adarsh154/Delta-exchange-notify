@@ -68,7 +68,7 @@ if __name__ == "__main__":
     while True:
         count = 0
         local_count = 0
-        time.sleep(310)
+        time.sleep(155)
         # Get today's or tomorrow's date based on time
         day = (datetime.now()).strftime('%d-%m-%Y')
         if datetime.now().hour > 17 or (datetime.now().hour == 17 and datetime.now().minute >= 30):
@@ -77,7 +77,12 @@ if __name__ == "__main__":
         date_refined = date_refined + day[1:3]
         date_refined = date_refined + '' if day[3] == '0' else day[3]
         date_refined = date_refined + day[4:]
-        calls_buy, calls_sell = get_strike_prices(coin="ETH")
+        try:
+            calls_buy, calls_sell = get_strike_prices(coin="ETH")
+        except Exception as e:
+            logger.error(str(e))
+            telegram.send_message(str(e))
+            continue
 
         c, p = 0, 1
         while c < len(calls_buy) - 1:
