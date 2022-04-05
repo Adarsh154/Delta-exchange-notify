@@ -1,7 +1,7 @@
 from datetime import datetime
 import itertools
 import requests
-import telegram
+import telegram_code
 import concurrent.futures
 from copy import deepcopy
 import logging
@@ -10,9 +10,9 @@ log_file = str(datetime.utcnow().strftime('%d_%m_%Y')) + '.log'
 logging.basicConfig(filename=log_file,
                     format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
                     datefmt='%Y-%m-%d:%H:%M:%S',
-                    level=logging.INFO, filemode='a')
+                    level=logging.DEBUG, filemode='a')
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 
 def get_prices(strike, mode):
@@ -26,7 +26,7 @@ def get_prices(strike, mode):
             r.raise_for_status()
         return strike, r.json()['result'][mode][0]['price']
     except requests.exceptions.RequestException as e:
-        telegram.send_message(str(e))
+        telegram_code.send_message(str(e))
         logger.error("requests error:" + str(e))
 
 
@@ -45,7 +45,7 @@ def get_strike_prices(coin, date_refined, call_or_put):
                 all_sell.append(i['symbol'])
 
     except requests.exceptions.RequestException as e:
-        telegram.send_message(str(e))
+        telegram_code.send_message(str(e))
         logger.error("requests at strike price error:" + str(e))
 
     all_buy = deepcopy(all_sell)

@@ -1,6 +1,6 @@
 import time
 from datetime import datetime, timedelta
-import telegram
+import telegram_code
 import logging
 
 import utilities
@@ -9,9 +9,9 @@ log_file = str(datetime.utcnow().strftime('%d_%m_%Y')) + '.log'
 logging.basicConfig(filename=log_file,
                     format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
                     datefmt='%Y-%m-%d:%H:%M:%S',
-                    level=logging.INFO, filemode='a')
+                    level=logging.DEBUG, filemode='a')
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 if __name__ == "__main__":
     current_hour = datetime.now().hour
@@ -30,7 +30,7 @@ if __name__ == "__main__":
             puts_buy, puts_sell = utilities.get_strike_prices("BTC", date_refined, "put")
         except Exception as e:
             logger.error(str(e))
-            telegram.send_message(str(e))
+            telegram_code.send_message(str(e))
             continue
 
         c, p = 0, 1
@@ -44,7 +44,7 @@ if __name__ == "__main__":
                     to_send = str(puts_buy[c] + puts_sell[p])
                     if datetime.now().hour == current_hour:
                         if to_send not in message_sent[current_hour]:
-                            status, error_message = telegram.send_message(to_send, False)
+                            status, error_message = telegram_code.send_message(to_send, False)
                             message_sent[current_hour].append(to_send)
                             if not status:
                                 logger.error("Message send error" + error_message)
@@ -52,7 +52,7 @@ if __name__ == "__main__":
                         current_hour = datetime.now().hour
                         message_sent = {datetime.now().hour: []}
                         if to_send not in message_sent[current_hour]:
-                            status, error_message = telegram.send_message(to_send, False)
+                            status, error_message = telegram_code.send_message(to_send, False)
                             message_sent[current_hour].append(to_send)
                             if not status:
                                 logger.error("Message send error" + error_message)
