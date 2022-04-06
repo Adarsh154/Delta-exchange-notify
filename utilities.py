@@ -24,7 +24,7 @@ def get_prices(strike, mode):
         }, headers=headers)
         if not r.ok:
             r.raise_for_status()
-        return strike, r.json()['result'][mode][0]['price']
+        return strike, r.json()['result'][mode][0]['price'], "size={}".format(r.json()['result'][mode][0]['size'])
     except requests.exceptions.RequestException as e:
         telegram_code.send_message(str(e))
         logger.error("requests error:" + str(e))

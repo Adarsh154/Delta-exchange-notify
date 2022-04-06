@@ -41,7 +41,8 @@ if __name__ == "__main__":
             else:
                 diff = float(calls_buy[c][1]) - float(calls_sell[p][1])
                 if diff >= 2 and diff > ((float(calls_buy[c][1]) + float(calls_sell[p][1])) * 0.1):
-                    to_send = str(calls_buy[c] + calls_sell[p])
+                    to_send = str(calls_buy[c] + calls_sell[p]) + " Diff = {}".format(
+                        diff - ((float(calls_buy[c][1]) + float(calls_sell[p][1])) * 0.1))
                     if datetime.now().hour == current_hour:
                         if to_send not in message_sent[current_hour]:
                             status, error_message = telegram_code.send_message(to_send, False)
