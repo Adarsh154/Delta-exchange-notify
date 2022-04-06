@@ -20,7 +20,7 @@ if __name__ == "__main__":
         time.sleep(75)
         # Get today's or tomorrow's date based on time
         day = (datetime.now()).strftime('%d-%m-%Y')
-        if datetime.now().hour > 17 or (datetime.now().hour == 17 and datetime.now().minute >= 30):
+        if datetime.now().hour > 15:
             day = (datetime.now() + timedelta(1)).strftime('%d-%m-%Y')
         date_refined = '' if day[0] == '0' else day[0]
         date_refined = date_refined + day[1:3]
