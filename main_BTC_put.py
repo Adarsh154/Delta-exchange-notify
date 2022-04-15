@@ -40,7 +40,7 @@ if __name__ == "__main__":
                 c += 1
                 p = c + 1
             else:
-                diff = float(puts_buy[c][1]) - float(puts_sell[p][1])
+                diff = float(int((float(puts_buy[c][1]) - float(puts_sell[p][1]))*100)/100)
                 if diff >= 2 and diff > ((float(puts_buy[c][1]) + float(puts_sell[p][1])) * 0.1):
                     to_send = str(puts_buy[c] + puts_sell[p]) + " Diff = {}".format(
                         diff - ((float(puts_buy[c][1]) + float(puts_sell[p][1])) * 0.1))
