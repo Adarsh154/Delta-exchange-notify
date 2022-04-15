@@ -40,10 +40,10 @@ if __name__ == "__main__":
                 c += 1
                 p = c + 1
             else:
-                diff = round(float(puts_buy[c][1]) - float(puts_sell[p][1]), 3)
+                diff = float(puts_buy[c][1]) - float(puts_sell[p][1])
                 if diff >= 0.05 and diff > ((float(puts_buy[c][1]) + float(puts_sell[p][1])) * 0.1):
                     to_send = str(puts_buy[c] + puts_sell[p]) + " Diff = {}".format(
-                        round(diff - ((float(puts_buy[c][1]) + float(puts_sell[p][1])) * 0.1)), 3)
+                        diff - ((float(puts_buy[c][1]) + float(puts_sell[p][1])) * 0.1))
                     if datetime.now(tz=gettz('Asia/Kolkata')).hour == current_hour:
                         if to_send not in message_sent[current_hour]:
                             status, error_message = telegram_code.send_message(to_send, False)
