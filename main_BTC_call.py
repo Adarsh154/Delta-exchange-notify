@@ -1,24 +1,16 @@
 import time
 from dateutil.tz import gettz
 from datetime import datetime, timedelta
-import telegram_code
-import logging
+from utilities import logger
 
 import utilities
 
-log_file = str(datetime.utcnow().strftime('%d_%m_%Y')) + '.log'
-logging.basicConfig(filename=log_file,
-                    format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-                    datefmt='%Y-%m-%d:%H:%M:%S',
-                    level=logging.DEBUG, filemode='a')
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
 
 if __name__ == "__main__":
     current_hour = datetime.now(tz=gettz('Asia/Kolkata')).hour
     message_sent = {current_hour: []}
     while True:
-        time.sleep(78)
+        time.sleep(48)
         # Get today's or tomorrow's date based on time
         day = (datetime.now(tz=gettz('Asia/Kolkata'))).strftime('%d-%m-%Y')
         if datetime.now(tz=gettz('Asia/Kolkata')).hour > 15:
@@ -31,7 +23,7 @@ if __name__ == "__main__":
             calls_buy, calls_sell = utilities.get_strike_prices("BTC", date_refined, "call")
         except Exception as e:
             logger.error(str(e))
-            telegram_code.send_message(str(e))
+            # utilities.send_message(str(e))
             continue
 
         c, p = 0, 1
@@ -46,7 +38,7 @@ if __name__ == "__main__":
                         diff - ((float(calls_buy[c][1]) + float(calls_sell[p][1])) * 0.1))
                     if datetime.now(tz=gettz('Asia/Kolkata')).hour == current_hour:
                         if to_send not in message_sent[current_hour]:
-                            status, error_message = telegram_code.send_message(to_send, False)
+                            status, error_message = utilities.send_message(to_send, False)
                             message_sent[current_hour].append(to_send)
                             if not status:
                                 logger.error("Message send error" + error_message)
@@ -54,7 +46,7 @@ if __name__ == "__main__":
                         current_hour = datetime.now(tz=gettz('Asia/Kolkata')).hour
                         message_sent = {datetime.now(tz=gettz('Asia/Kolkata')).hour: []}
                         if to_send not in message_sent[current_hour]:
-                            status, error_message = telegram_code.send_message(to_send, False)
+                            status, error_message = utilities.send_message(to_send, False)
                             message_sent[current_hour].append(to_send)
                             if not status:
                                 logger.error("Message send error" + error_message)

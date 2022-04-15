@@ -1,7 +1,5 @@
-import requests
 import os
 from datetime import datetime
-import logging
 from telegram.ext.updater import Updater
 from telegram.update import Update
 from telegram.ext.callbackcontext import CallbackContext
@@ -9,13 +7,6 @@ from telegram.ext.commandhandler import CommandHandler
 from telegram.ext.messagehandler import MessageHandler
 from telegram.ext.filters import Filters
 
-log_file = "tel" + '.log'
-logging.basicConfig(filename=log_file,
-                    format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-                    datefmt='%Y-%m-%d:%H:%M:%S',
-                    level=logging.ERROR, filemode='a')
-logger = logging.getLogger()
-logger.setLevel(logging.ERROR)
 
 token = os.getenv("ttoken")
 updater = Updater(token,
@@ -61,17 +52,3 @@ updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown_text))
 
 updater.start_polling()
 
-
-def send_message(text, error_message=True):
-    if not error_message:
-        url = "https://api.telegram.org/bot{}/sendMessage?chat_id=-712571332&text" \
-              "={}".format(token, text)
-    else:
-        url = "https://api.telegram.org/bot{}/sendMessage?chat_id=-746042764&text" \
-              "={}".format(token, text)
-
-    response = requests.get(url)
-    if not response.ok:
-        logger.error("telegram response code: " + str(response.status_code) + "Error message" + response.text)
-
-    return True, ""

@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 import itertools
 import requests
@@ -10,9 +11,13 @@ log_file = str(datetime.utcnow().strftime('%d_%m_%Y')) + '.log'
 logging.basicConfig(filename=log_file,
                     format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
                     datefmt='%Y-%m-%d:%H:%M:%S',
-                    level=logging.DEBUG, filemode='a')
+                    level=logging.ERROR, filemode='a')
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
+
+token = os.getenv("ttoken")
+for _ in logging.root.manager.loggerDict:
+    logging.getLogger(_).disabled = True
 
 
 def get_prices(strike, mode):
@@ -26,7 +31,7 @@ def get_prices(strike, mode):
             r.raise_for_status()
         return strike, r.json()['result'][mode][0]['price'], "size={}".format(r.json()['result'][mode][0]['size'])
     except requests.exceptions.RequestException as e:
-        telegram_code.send_message(str(e))
+        send_message(str(e))
         logger.error("requests error:" + str(e))
 
 
@@ -45,7 +50,7 @@ def get_strike_prices(coin, date_refined, call_or_put):
                 all_sell.append(i['symbol'])
 
     except requests.exceptions.RequestException as e:
-        telegram_code.send_message(str(e))
+        send_message(str(e))
         logger.error("requests at strike price error:" + str(e))
 
     all_buy = deepcopy(all_sell)
@@ -60,3 +65,18 @@ def get_strike_prices(coin, date_refined, call_or_put):
         all_buy.sort(key=lambda x: x[0])
         all_sell.sort(key=lambda x: x[0])
     return all_buy, all_sell
+
+
+def send_message(text, error_message=True):
+    if not error_message:
+        url = "https://api.telegram.org/bot{}/sendMessage?chat_id=-712571332&text" \
+              "={}".format(token, text)
+    else:
+        url = "https://api.telegram.org/bot{}/sendMessage?chat_id=-746042764&text" \
+              "={}".format(token, text)
+
+    response = requests.get(url)
+    if not response.ok:
+        logger.error("telegram response code: " + str(response.status_code) + "Error message" + response.text)
+
+    return True, ""
