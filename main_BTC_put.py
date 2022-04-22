@@ -32,10 +32,11 @@ if __name__ == "__main__":
                 c += 1
                 p = c + 1
             else:
-                diff = float(int((float(puts_buy[c][1]) - float(puts_sell[p][1]))*100)/100)
-                if diff >= 2 and diff > ((float(puts_buy[c][1]) + float(puts_sell[p][1])) * 0.1):
-                    to_send = str(puts_buy[c] + puts_sell[p]) + " Diff = {}".format(
-                        diff - ((float(puts_buy[c][1]) + float(puts_sell[p][1])) * 0.1))
+                diff_plain = float(int((float(puts_buy[c][1]) - float(puts_sell[p][1])) * 100) / 100)
+                if diff_plain >= 0.00:
+                    diff_with_charges = diff_plain - ((float(puts_buy[c][1]) + float(puts_sell[p][1])) * 0.1)
+                    to_send = str(puts_buy[c] + puts_sell[p]) + " \n Diff_plain = {}\nDiff_with_charges = {}".format(
+                        diff_plain, diff_with_charges)
                     if datetime.now(tz=gettz('Asia/Kolkata')).hour == current_hour:
                         if to_send not in message_sent[current_hour]:
                             status, error_message = utilities.send_message(to_send, False)
