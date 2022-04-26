@@ -33,7 +33,8 @@ if __name__ == "__main__":
                 p = c + 1
             else:
                 diff_plain = float(int((float(calls_buy[c][1]) - float(calls_sell[p][1])) * 100) / 100)
-                if diff_plain >= 0.0:
+                if diff_plain >= 0.00 and (min(float(calls_buy[c][2][5:]), float(calls_sell[p][2][5:])) > 50) and not (
+                        float(calls_buy[c][1]) == float(calls_sell[p][1]) == 2.5):
                     diff_with_charges = diff_plain - ((float(calls_buy[c][1]) + float(calls_sell[p][1])) * 0.1)
                     to_send = str(calls_buy[c] + calls_sell[p]) + " \n Diff_plain = {}\nDiff_with_charges = {}".format(
                         diff_plain, diff_with_charges)
