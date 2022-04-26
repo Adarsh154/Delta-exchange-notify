@@ -2,7 +2,6 @@ import os
 from datetime import datetime
 import itertools
 import requests
-import telegram_code
 import concurrent.futures
 from copy import deepcopy
 import logging
