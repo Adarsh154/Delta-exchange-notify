@@ -9,7 +9,7 @@ if __name__ == "__main__":
     message_sent = {current_hour: []}
 
     while True:
-        time.sleep(40)
+        time.sleep(30)
         # Get today's or tomorrow's date based on time
         day = (datetime.now(tz=gettz('Asia/Kolkata'))).strftime('%d-%m-%Y')
         if datetime.now(tz=gettz('Asia/Kolkata')).hour > 15:
