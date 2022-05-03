@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 import utilities
 from utilities import logger
 
-
 if __name__ == "__main__":
     current_hour = datetime.now(tz=gettz('Asia/Kolkata')).hour
     message_sent = {current_hour: []}
@@ -34,9 +33,9 @@ if __name__ == "__main__":
                 diff_plain = float(int((float(puts_buy[c][1]) - float(puts_sell[p][1])) * 100) / 100)
                 if diff_plain >= 0.00:
                     diff_with_charges = diff_plain - ((float(puts_buy[c][1]) + float(puts_sell[p][1])) * 0.1)
-                    to_send = str("Sell-" + puts_buy[c] + "Buy-" + puts_sell[
-                        p]) + " \n Diff_plain = {}\nDiff_with_charges = {}".format(
-                        diff_plain, diff_with_charges)
+                    to_send = "Sell-" + str(puts_buy[c]) + ", Buy-" + str(puts_sell[p]) + \
+                              " \n Diff_plain = {}\nDiff_with_charges = {}".format(
+                                  diff_plain, diff_with_charges)
                     if datetime.now(tz=gettz('Asia/Kolkata')).hour == current_hour:
                         if to_send not in message_sent[current_hour]:
                             status, error_message = utilities.send_message(to_send, False)

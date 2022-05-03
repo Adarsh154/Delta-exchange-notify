@@ -35,7 +35,7 @@ if __name__ == "__main__":
                 if diff_plain >= 0.00 and (min(float(puts_buy[c][2][5:]), float(puts_sell[p][2][5:])) > 50) and not (
                         float(puts_buy[c][1]) == float(puts_sell[p][1]) == 2.5):
                     diff_with_charges = diff_plain - ((float(puts_buy[c][1]) + float(puts_sell[p][1])) * 0.1)
-                    to_send = str("Sell-" + puts_buy[c] + "Buy-" + puts_sell[
+                    to_send = "Sell-" + str(puts_buy[c]) + ", Buy-" + str(puts_sell[
                         p]) + " \n Diff_plain = {}\nDiff_with_charges = {}".format(
                         diff_plain, diff_with_charges)
                     if datetime.now(tz=gettz('Asia/Kolkata')).hour == current_hour:
