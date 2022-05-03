@@ -1,0 +1,27 @@
+# IDE files
+.idea/
+*.json
+# UI files
+sizer/webapps/src/environments/environment.ts
+
+# Log files
+*.log*
+!/logs/app_logs/.keep
+!/logs/server_logs/.keep
+
+# Compiled files
+*.pyc
+
+# Migration files
+/core/migrations/**
+/env_setup/migrations/**
+
+# File types
+*.png
+*.exe
+*.csv
+*.pptx
+*.pdf
+
+# Binary files
+go_refactor_script*
