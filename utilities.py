@@ -30,7 +30,8 @@ def get_prices(strike, mode):
             r.raise_for_status()
         return strike, r.json()['result'][mode][0]['price'], "size={}".format(r.json()['result'][mode][0]['size'])
     except requests.exceptions.RequestException as e:
-        send_message(str(e))
+        if "Internal Server Error".lower() not in str(e).lower():
+            send_message(str(e))
         logger.error("requests error:" + str(e))
 
 
