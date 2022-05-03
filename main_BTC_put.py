@@ -5,12 +5,11 @@ from utilities import logger
 
 import utilities
 
-
 if __name__ == "__main__":
     current_hour = datetime.now(tz=gettz('Asia/Kolkata')).hour
     message_sent = {current_hour: []}
     while True:
-        time.sleep(40)
+        # time.sleep(40)
         # Get today's or tomorrow's date based on time
         day = (datetime.now(tz=gettz('Asia/Kolkata'))).strftime('%d-%m-%Y')
         if datetime.now(tz=gettz('Asia/Kolkata')).hour > 15:
@@ -36,7 +35,8 @@ if __name__ == "__main__":
                 if diff_plain >= 0.00 and (min(float(puts_buy[c][2][5:]), float(puts_sell[p][2][5:])) > 50) and not (
                         float(puts_buy[c][1]) == float(puts_sell[p][1]) == 2.5):
                     diff_with_charges = diff_plain - ((float(puts_buy[c][1]) + float(puts_sell[p][1])) * 0.1)
-                    to_send = str(puts_buy[c] + puts_sell[p]) + " \n Diff_plain = {}\nDiff_with_charges = {}".format(
+                    to_send = str("Sell-" + puts_buy[c] + "Buy-" + puts_sell[
+                        p]) + " \n Diff_plain = {}\nDiff_with_charges = {}".format(
                         diff_plain, diff_with_charges)
                     if datetime.now(tz=gettz('Asia/Kolkata')).hour == current_hour:
                         if to_send not in message_sent[current_hour]:

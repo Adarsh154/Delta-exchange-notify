@@ -5,7 +5,6 @@ from utilities import logger
 
 import utilities
 
-
 if __name__ == "__main__":
     current_hour = datetime.now(tz=gettz('Asia/Kolkata')).hour
     message_sent = {current_hour: []}
@@ -36,7 +35,8 @@ if __name__ == "__main__":
                 if diff_plain >= 0.00 and (min(float(calls_buy[c][2][5:]), float(calls_sell[p][2][5:])) > 50) and not (
                         float(calls_buy[c][1]) == float(calls_sell[p][1]) == 2.5):
                     diff_with_charges = diff_plain - ((float(calls_buy[c][1]) + float(calls_sell[p][1])) * 0.1)
-                    to_send = str(calls_buy[c] + calls_sell[p]) + " \n Diff_plain = {}\nDiff_with_charges = {}".format(
+                    to_send = str("Sell-" + calls_buy[c] + "Buy -" + calls_sell[
+                        p]) + " \n Diff_plain = {}\nDiff_with_charges = {}".format(
                         diff_plain, diff_with_charges)
                     if datetime.now(tz=gettz('Asia/Kolkata')).hour == current_hour:
                         if to_send not in message_sent[current_hour]:
