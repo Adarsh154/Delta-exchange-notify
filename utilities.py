@@ -35,6 +35,11 @@ def get_prices(strike, mode):
         logger.error("requests error:" + str(e))
 
 
+def my_func(text, coin):
+    new_text = text[text.find(coin) + 4:]
+    return float(new_text[:new_text.find("-")])
+
+
 # Api call to get strike price symbols
 def get_strike_prices(coin, date_refined, call_or_put):
     all_sell = list()
@@ -59,11 +64,11 @@ def get_strike_prices(coin, date_refined, call_or_put):
         all_buy = list(executor.map(get_prices, all_buy, itertools.repeat("buy")))
 
     if call_or_put == "call":
-        all_buy.sort(key=lambda x: x[0], reverse=True)
-        all_sell.sort(key=lambda x: x[0], reverse=True)
+        all_buy.sort(key=lambda x: my_func(x[0], coin), reverse=True)
+        all_sell.sort(key=lambda x: my_func(x[0], coin), reverse=True)
     else:
-        all_buy.sort(key=lambda x: x[0])
-        all_sell.sort(key=lambda x: x[0])
+        all_buy.sort(key=lambda x: my_func(x[0], coin))
+        all_sell.sort(key=lambda x: my_func(x[0], coin))
     return all_buy, all_sell
 
 
