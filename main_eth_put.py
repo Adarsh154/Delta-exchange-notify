@@ -8,7 +8,7 @@ if __name__ == "__main__":
     current_hour = datetime.now(tz=gettz('Asia/Kolkata')).hour
     message_sent = {current_hour: []}
     while True:
-        time.sleep(35)
+        time.sleep(39)
         # Get today's or tomorrow's date based on time
         day = (datetime.now(tz=gettz('Asia/Kolkata'))).strftime('%d-%m-%Y')
         if datetime.now(tz=gettz('Asia/Kolkata')).hour > 15:
@@ -43,8 +43,9 @@ if __name__ == "__main__":
                             if not status:
                                 logger.error("Message send error" + error_message)
                     else:
+                        del message_sent[current_hour]
                         current_hour = datetime.now(tz=gettz('Asia/Kolkata')).hour
-                        message_sent = {datetime.now(tz=gettz('Asia/Kolkata')).hour: []}
+                        message_sent = {current_hour: []}
                         if to_send not in message_sent[current_hour]:
                             status, error_message = utilities.send_message(to_send, False)
                             message_sent[current_hour].append(to_send)
