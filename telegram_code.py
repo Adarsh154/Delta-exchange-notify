@@ -20,7 +20,7 @@ def start(update: Update, context: CallbackContext):
 
 def get_processes(update: Update, context: CallbackContext):
     running_process = os.popen("ps -aef | grep -i 'python3' | grep -v 'grep'").read().strip().split('\n')
-    if len(running_process) < 5:
+    if len(running_process) < 6:
         update.message.reply_text("Something not right, check processes---> Contact AJ")
         for process in running_process:
             update.message.reply_text(process)
