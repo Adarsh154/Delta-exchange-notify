@@ -13,5 +13,6 @@ if __name__ == "__main__":
         except Exception as e:
             logger.error(str(e))
             continue
-        with concurrent.futures.ProcessPoolExecutor() as executor:
+
+        with concurrent.futures.ThreadPoolExecutor() as executor:
             executor.map(ETH.ev_eth, eth_puts_club)
