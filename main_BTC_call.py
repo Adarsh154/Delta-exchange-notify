@@ -1,7 +1,7 @@
 import concurrent.futures
+import itertools
 import time
 from utilities import logger
-import BTC
 import get_responses
 
 if __name__ == "__main__":
@@ -14,4 +14,4 @@ if __name__ == "__main__":
             logger.error(str(e))
             continue
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.map(BTC.ev_btc, btc_call_club)
+            f = executor.map(get_responses.ev, btc_call_club, itertools.repeat("BTC"))
