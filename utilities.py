@@ -5,6 +5,8 @@ import requests
 import concurrent.futures
 from copy import deepcopy
 import logging
+from datetime import datetime
+from dateutil.tz import gettz
 
 log_file = str(datetime.utcnow().strftime('%d_%m_%Y')) + '.log'
 logging.basicConfig(filename=log_file,
@@ -85,3 +87,21 @@ def send_message(text, error_message=True):
         logger.error("telegram response code: " + str(response.status_code) + "Error message" + response.text)
 
     return True, ""
+
+
+def check_and_send(current_hour, message_sent, to_send):
+    if datetime.now(tz=gettz('Asia/Kolkata')).hour == current_hour:
+        if to_send not in message_sent[current_hour]:
+            status, error_message = send_message(to_send, False)
+            message_sent[current_hour].append(to_send)
+            if not status:
+                logger.error("Message send error" + error_message)
+    else:
+        current_hour = datetime.now(tz=gettz('Asia/Kolkata')).hour
+        message_sent = {current_hour: []}
+        if to_send not in message_sent[current_hour]:
+            status, error_message = send_message(to_send, False)
+            message_sent[current_hour].append(to_send)
+            if not status:
+                logger.error("Message send error" + error_message)
+        return message_sent
