@@ -3,9 +3,14 @@ import itertools
 import time
 from utilities import logger
 import get_responses
+from datetime import datetime
+import utilities
+from dateutil.tz import gettz
 
 if __name__ == "__main__":
 
+    current_hour = datetime.now(tz=gettz('Asia/Kolkata')).hour
+    message_sent = {current_hour: []}
     while True:
         time.sleep(10)
         try:
@@ -14,4 +19,8 @@ if __name__ == "__main__":
             logger.error(str(e))
             continue
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            f = executor.map(get_responses.ev, btc_call_club, itertools.repeat("BTC"))
+            results = list(executor.map(get_responses.ev, btc_call_club, itertools.repeat("BTC")))
+        if any(results):
+            for messages in results:
+                for to_send in messages:
+                    message_sent = utilities.check_and_send(current_hour, message_sent, to_send)
