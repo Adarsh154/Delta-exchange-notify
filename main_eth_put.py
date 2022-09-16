@@ -23,4 +23,6 @@ if __name__ == "__main__":
         if any(results):
             for messages in results:
                 for to_send in messages:
-                    message_sent = utilities.check_and_send(current_hour, message_sent, to_send)
+                    message_sent = utilities.check_and_send(message_sent, to_send)
+        if len(message_sent) > 3:
+            del message_sent[list(message_sent.keys())[0]]
