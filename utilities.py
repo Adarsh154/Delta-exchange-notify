@@ -89,19 +89,13 @@ def send_message(text, error_message=True):
     return True, ""
 
 
-def check_and_send(current_hour, message_sent, to_send):
-    if datetime.now(tz=gettz('Asia/Kolkata')).hour == current_hour:
-        if to_send not in message_sent[current_hour]:
-            status, error_message = send_message(to_send, False)
-            message_sent[current_hour].append(to_send)
-            if not status:
-                logger.error("Message send error" + error_message)
-    else:
-        current_hour = datetime.now(tz=gettz('Asia/Kolkata')).hour
-        message_sent = {current_hour: []}
-        if to_send not in message_sent[current_hour]:
-            status, error_message = send_message(to_send, False)
-            message_sent[current_hour].append(to_send)
-            if not status:
-                logger.error("Message send error" + error_message)
-        return message_sent
+def check_and_send(message_sent, to_send):
+    current_hour = datetime.now(tz=gettz('Asia/Kolkata')).hour
+    if current_hour not in message_sent:
+        message_sent[current_hour] = []
+    if to_send not in message_sent[current_hour]:
+        status, error_message = send_message(to_send, False)
+        message_sent[current_hour].append(to_send)
+        if not status:
+            logger.error("Message send error" + error_message)
+    return message_sent
