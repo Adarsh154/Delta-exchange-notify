@@ -101,7 +101,6 @@ def get_master_response():
                         (r['symbol'], r['quotes']['best_ask'], 'size={}'.format(r['quotes']['ask_size'])))
             elif 'ETH' in r['symbol']:
                 if r['contract_type'] == "call_options":
-                    date = r['symbol'][find_nth(r['symbol'], "-", 3) + 1:]
                     if date not in ETH_call_buy_master:
                         ETH_call_buy_master[date] = list()
                         ETH_call_sell_master[date] = list()
