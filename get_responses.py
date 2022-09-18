@@ -147,27 +147,27 @@ def get_master_response():
 
 
 def ev(data, coin):
-    buy, sell, date = data
+    sell, buy, date = data
     send_list = []
     c, p = 0, 1
-    while c < len(buy) - 1:
-        if p == len(buy) - 1:
+    while c < len(sell) - 1:
+        if p == len(sell) - 1:
             c += 1
             p = c + 1
         else:
             try:
-                diff_plain = float(int((float(buy[c][1]) - float(sell[p][1])) * 100) / 100)
-                if diff_plain >= -5 and (float(buy[c][1]) // 10 > 0):
-                    if coin == "BTC" and not ((min(float(buy[c][2][5:]), float(sell[p][2][5:])) > 50) and not (
-                            float(buy[c][1]) == float(sell[p][1]) == 2.5) and diff_plain >= -10 and (
-                            float(buy[c][1]) // 100 > 0)):
+                diff_plain = float(int((float(sell[c][1]) - float(buy[p][1])) * 100) / 100)
+                if diff_plain >= -5 and (float(sell[c][1]) // 10 > 0):
+                    if coin == "BTC" and not ((min(float(sell[c][2][5:]), float(buy[p][2][5:])) > 50) and not (
+                            float(sell[c][1]) == float(buy[p][1]) == 2.5) and diff_plain >= -10 and (
+                            float(sell[c][1]) // 100 > 0)):
                         p += 1
                         continue
-                    if coin == "ETH" and not (float(sell[p][1]) > 20):
+                    if coin == "ETH" and not (float(sell[c][1]) > 20):
                         p += 1
                         continue
-                    diff_with_charges = diff_plain - ((float(buy[c][1]) + float(sell[p][1])) * 0.1)
-                    to_send = date + "\nSell-" + str(buy[c]) + ", Buy-" + str(sell[p]) + \
+                    diff_with_charges = diff_plain - ((float(sell[c][1]) + float(buy[p][1])) * 0.1)
+                    to_send = date + "\nSell-" + str(sell[c]) + ", Buy-" + str(buy[p]) + \
                         "\n Diff_plain = {}\nDiff_with_charges " "= {}".format(
                                   diff_plain, diff_with_charges)
                     send_list.append(to_send)
