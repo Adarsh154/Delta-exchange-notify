@@ -157,9 +157,13 @@ def ev(data, coin):
         else:
             try:
                 diff_plain = float(int((float(buy[c][1]) - float(sell[p][1])) * 100) / 100)
-                if diff_plain >= 0.00:
+                if diff_plain >= -5 and (float(buy[c][1]) // 10 > 0):
                     if coin == "BTC" and not ((min(float(buy[c][2][5:]), float(sell[p][2][5:])) > 50) and not (
-                            float(buy[c][1]) == float(sell[p][1]) == 2.5)):
+                            float(buy[c][1]) == float(sell[p][1]) == 2.5) and diff_plain >= -10 and (
+                            float(buy[c][1]) // 100 > 0)):
+                        p += 1
+                        continue
+                    if coin == "ETH" and not (float(sell[p][1]) > 20):
                         p += 1
                         continue
                     diff_with_charges = diff_plain - ((float(buy[c][1]) + float(sell[p][1])) * 0.1)
