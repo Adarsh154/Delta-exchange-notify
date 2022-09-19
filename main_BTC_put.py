@@ -12,7 +12,7 @@ if __name__ == "__main__":
     current_hour = datetime.now(tz=gettz('Asia/Kolkata')).hour
     message_sent = {current_hour: []}
     while True:
-        time.sleep(10)
+        time.sleep(5)
         try:
             btc_call_club, btc_puts_club, eth_call_club, eth_puts_club = get_responses.get_master_response()
         except Exception as e:
